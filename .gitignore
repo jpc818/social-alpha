@@ -1,10 +1,42 @@
-# Ignore environment variables
+# Secrets
 .env
+.env.*
+!.env.example
 
-# Ignore Python cache
+# Python
 __pycache__/
-*.pyc
-*.pyo
-
-# Ignore virtual environment
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
 ai-bot-env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+
+# Local data & tokens
+data/twitter.db
+data/*.db
+schwab_token.json
+*.token.json
+logs/
+*.log
+
+# Model artifacts
+models/artifacts/
+*.joblib
+*.pkl
+*.model

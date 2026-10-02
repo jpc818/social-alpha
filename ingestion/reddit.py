@@ -61,8 +61,9 @@ def save_posts_to_json(posts, output_path: str):
     print(f"[INFO] Saved {len(posts)} posts to {output_path}")
 
 if __name__ == "__main__":
-    KEYWORDS = ["Tesla", "TSLA", "Bitcoin", "BTC", "AAPL", "Apple"]
-    SUBREDDITS = ["stocks", "wallstreetbets", "investing", "cryptocurrency"]
+    # Prefer: python main.py ingest  (SQLite + meme config.yaml)
+    KEYWORDS = ["squeeze", "moon", "short interest", "catalyst"]
+    SUBREDDITS = ["wallstreetbets", "shortsqueeze", "pennystocks", "SPACs"]
 
     posts = fetch_reddit_posts(KEYWORDS, SUBREDDITS, limit=50)
     save_posts_to_json(posts, "data/raw/reddit_posts.json")

@@ -1,0 +1,68 @@
+# social-alpha configuration
+
+ingest:
+  # reddit requires API approval; use offline until then
+  mode: offline  # offline | reddit
+
+paper:
+  starting_cash: 1000.0
+  max_position_pct: 0.20
+  max_open_positions: 2
+  daily_loss_limit_pct: 0.03
+  max_day_trades_per_5_sessions: 3
+  flatten_before_close: true
+  slippage_bps: 10
+  spread_bps: 10
+
+reddit:
+  subreddits:
+    - wallstreetbets
+    - shortsqueeze
+    - pennystocks
+    - SPACs
+    - memeeconomy
+  keywords:
+    - squeeze
+    - moon
+    - short interest
+    - catalyst
+  post_limit: 100
+  poll_interval_seconds: 300
+
+news:
+  enabled: true
+  keywords:
+    - squeeze
+    - meme stock
+    - GME
+    - AMC
+  limit: 30
+
+twitter:
+  enabled: false
+  query: "(squeeze OR \"meme stock\") lang:en -is:retweet"
+  max_results: 50
+
+sentiment:
+  provider: vader
+  openai_model: gpt-4o-mini
+
+market:
+  primary: yfinance
+  min_price: 1.0
+  max_price: 80.0
+  min_avg_volume: 200000
+
+universe:
+  # Meme / high-retail-interest names for offline mode
+  seed_tickers:
+    - GME
+    - AMC
+    - SOFI
+    - RIVN
+    - LCID
+    - MARA
+    - RIOT
+    - CLOV
+    - BB
+    - NOK

@@ -1,112 +1,68 @@
-# 🤖 AI Trading Bot — LLM Agent with Sentiment Analysis
+# social-alpha
 
-A **production-style, agentic AI trading bot** that combines **LLM reasoning, sentiment analysis, market indicators, and broker APIs** to make and (optionally) execute trading decisions.
+Fork of [Agentic-AI-Trading-Bot-with-LLM-reasoning-sentiment-analysis](https://github.com/fsaavedra0003/Agentic-AI-Trading-Bot-with-LLM-reasoning-sentiment-analysis), iterated for **meme-stock social sentiment research** and a **$1,000 paper day-trading simulator**.
 
-This repository is designed as a **portfolio / research project** demonstrating full-stack AI/ML engineering also cab be applied by anyone:
+**Live Schwab order placement is disabled.** Market data can move to Schwab after OAuth setup; execution stays paper until you explicitly unlock it later.
 
-- Data ingestion (News, Reddit, Twitter/X, PDFs).
-- LLM reasoning & tool orchestration  
-- Hybrid decision logic (LLM + ML + rules)
-- Backtesting & paper trading  API
-- Execution & monitoring with a Streamlit dashboard
-- Low risk invest 
+This is an experiment harness, not investment advice.
 
----
+## What works now
 
-## 📑 Table of Contents
+- **Offline ingest (default):** seed meme tickers + bundled sample Reddit/news JSON + optional NewsAPI
+- Reddit live ingest available when `ingest.mode: reddit` and you have API approval (Reddit blocked new self-serve apps)
+- VADER sentiment + `$TICKER` extraction (optional OpenAI)
+- SQLite storage for mentions, prices, paper orders
+- yfinance quotes with liquidity/price filters
+- Paper broker with PDT-aware limits (max 3 day trades / 5 sessions), position sizing, daily loss kill-switch
+- CLI: `ingest` → `prices` → `paper-once` → `status`
 
-1. [Project Overview](#project-overview)  
-2. [Features](#features) 
-3. [Architecture](#architecture)
-4. [Repo Structure](#repo-structure)
-5. [Quickstart](#quickstart)       
-6. [Configuration & Environment Variables](#configuration--environment-variables) 
-7. [Detailed Components](#detailed-components)  
-   - Ingestion  
-   - LLM Layer & Prompts  
-   - Decision Agent (Tooling)  
-   - Prediction Models / Backtesting  
-   - Execution  
-   - Dashboard & Monitoring  
-8. [Example Prompts & Response Schema](#example-prompts--response-schema)  
-9. [Risk Management & Safety](#risk-management--safety)  
-10. [Deployment Suggestions](#deployment-suggestions)  
-11. [Testing & Evaluation](#testing--evaluation)  
-12. [Contributing](#contributing)  
-13. [License](#license)  
-14. [Acknowledgements](#acknowledgements)  
+## What is not done yet
 
----
+- Wired Schwab OAuth market-data client (stub in `src/market.py`)
+- Correlation research notebooks / holdout evaluation
+- X/Twitter live polling (adapter exists upstream; API is paid — off by default)
+- Streamlit dashboard / live broker execution
 
-## 🏗️ Architecture
+## Setup
 
-![Architecture Overview](https://github.com/fsaavedra0003/Agentic-AI-Trading-Bot-with-LLM-reasoning-sentiment-analysis/blob/master/pictures/Architecture_overview.png?raw=true)
+1. Python 3.12+
+2. Create a virtualenv and install deps:
 
-**Pipeline Overview:**
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-- Multi-source ingestion: Twitter/X, Reddit, News API, earnings PDFs  
-- LLM reasoning: sentiment, structured insights, and decision-making 
-- Decision agent: orchestrates tools, indicators, and ML models  
-- Broker API: executes trades (paper trading recommended)  
-- Backtesting & monitoring via Streamlit dashboard  
+3. Copy env template:
 
----
+```bash
+copy .env.example .env
+```
 
-## 📘 Project Overview
+Reddit credentials are **optional** until Reddit approves API access (Responsible Builder Policy). Offline mode runs without them.
 
-This project demonstrates an **autonomous trading agent** that:
-- Ingests **news, tweets, Reddit posts, and earnings reports**  
-- Uses an **LLM** for sentiment, summarization, and structured reasoning
-- Invokes **tools** for technical indicators, risk calculation, and position sizing   
-- Makes decisions: `BUY` / `SELL` / `HOLD` + stop-loss/take-profit rules  
-- Optionally executes trades via broker API (paper trading strongly recommended)  
-- Includes **backtesting** and a **dashboard** for visualization  
+4. Optional: `NEWS_API_KEY`, OpenAI, Schwab developer app, X bearer token.
 
-**Goal:** Provide a **clear, modular, and documented** reference for portfolio demonstration and extension.
+## Usage
 
----
+```bash
+python main.py ingest
+python main.py prices
+python main.py paper-once
+python main.py status
+python main.py flatten
+```
 
-## 🚀 Features
+Config lives in `config.yaml` (cash, PDT limits, subreddits, filters).
 
-- **Multi-source ingestion:** Twitter, Reddit, News API, earnings PDFs
-- **LLM-based analysis:** Sentiment, summarization, reasoning (swap providers easily)
-- **Agent orchestration:** LangChain-style tool pattern for prompting 
-- **Hybrid decision logic:** LLM reasoning + configurable rules + ML models  
-- **Trading support:** Backtesting + paper-trading (Alpaca / Binance adapters) 
-- **Dashboard:** Streamlit visualization for sentiment & trade logs  
-- **DevOps ready:** CI checks, unit tests, Dockerfile examples 
-- **Risk controls:** max position size, configurable limits, circuit breakers  
+## Safety
 
----
+- `LIVE_TRADING=false` in `.env` — keep it that way
+- Paper account starts at `$1000` with max ~20% per position and EOD flatten helper
+- Under $25k, real PDT rules would restrict frequent day trades; the paper engine mirrors that
 
-## 📂 Repo Structure
+## Upstream
 
-Agentic-AI-Trading-Bot/
-│
-├─ ingestion/ # Twitter, Reddit, News, PDFs ingestion
-├─ sentiment/ # LLM-based sentiment & reasoning modules
-├─ models/ # ML models, feature engineering, backtesting
-├─ agents/ # Agent orchestration & tool invocation
-├─ execution/ # Broker adapters (paper/real trading)
-├─ dashboard/ # Streamlit UI
-├─ config/ # Env variables, settings, credentials
-├─ tests/ # Unit tests
-├─ main.py # Entry point (ingestion → analysis → decision)
-├─ requirements.txt # Python dependencies
-
-
-## ⚡ Quickstart
-
-
-
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/fsaavedra0003/Agentic-AI-Trading-Bot-with-LLM-reasoning-sentiment-analysis.git
-   cd Agentic-AI-Trading-Bot-with-L
-
-
-
-
-
-
-
+- `origin` → https://github.com/jpc818/social-alpha
+- `upstream` → original portfolio repo (ingestion / sentiment / xgboost sketches retained under `ingestion/`, `sentiment/`, `models/`)
